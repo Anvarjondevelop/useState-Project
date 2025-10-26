@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Mode } from "./App.js";
+import { Container, Mode, TodoList } from "./App.js";
 
 const AppComponent = () => {
   const [rang, setRang] = useState("");
@@ -38,13 +38,23 @@ const AppComponent = () => {
   const [b, setB] = useState("");
   const [darkmode, setDarkmode] = useState(false);
 
+  const [text, setText] = useState("");
+  const [add, setAdd] = useState([]);
+
+  function handleClick() {
+    if (text.trim() !== "") setAdd([...add, text]);
+    setText("");
+  }
+
+  const [hoverIndex, setHoverIndex] = useState(null);
+
   return (
     <Container
       style={{
         width: "100vw",
         height: "100vh",
         background: darkmode
-          ? "linear-gradient(135deg, #000f15 0%, #1b0801 50%, #012231 100%)"
+          ? "linear-gradient(135deg, #063345 0%, #381103 50%, #032737 100%)"
           : "linear-gradient(135deg, #dce8aa 0%, #80dada 50%, #7adb5c 100%)",
         color: darkmode ? "#F7F7FB" : "#2B2B2B",
         display: "flex",
@@ -110,12 +120,111 @@ const AppComponent = () => {
       <span>
         <select>
           <option>Select</option>
-          <option>**</option>
+          <option>*</option>
         </select>
       </span>
       <Input value={b} onChange={(e) => setB(e.target.value)} />
       <p>Result: {Number(a) * Number(b)}</p>
-      <p></p>
+
+      <TodoList>
+        <h1
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}
+        >
+          Todo List
+        </h1>
+        <input
+          type="text"
+          value={text}
+          placeholder="Todo list"
+          onChange={(e) => setText(e.target.value)}
+          style={{
+            padding: "10px 15px",
+            fontSize: "16px",
+            border: "2px solid #22e510",
+            borderRadius: "10px",
+            outline: "none",
+            marginRight: "10px",
+            transition: "0.3s",
+            backgroundColor: hoverIndex !== null ? "#f9fff9" : "white",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            width: "250px",
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        />
+        <button
+          onClick={handleClick}
+          style={{
+            backgroundColor: darkmode ? "black" : "green",
+            color: "white",
+            border: "none",
+            borderRadius: "10px",
+            cursor: "pointer",
+            padding: "10px 20px",
+            fontSize: "16px",
+            marginLeft: "10px",
+          }}
+        >
+          Add
+        </button>
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {add.map((text, index) => (
+            <li
+              key={index}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "250px",
+                background: "#fff3",
+                marginTop: "5px",
+                padding: "8px 12px",
+                borderRadius: "10px",
+              }}
+            >
+              {text}
+              <button
+                onClick={() => setAdd(add.filter((_, i) => i !== index))}
+                style={{
+                  backgroundColor: hoverIndex === index ? "red" : "#233c7e",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "4px 8px",
+                }}
+                onMouseEnter={() => setHoverIndex(index)}
+                onMouseLeave={() => setHoverIndex(null)}
+              >
+                🗑️.
+              </button>
+            </li>
+          ))}
+          {add.length > 0 && (
+            <button
+              onClick={() => setAdd([])}
+              style={{
+                backgroundColor: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "10px",
+                cursor: "pointer",
+                padding: "8px 18px",
+                fontSize: "14px",
+                marginTop: "15px",
+              }}
+            >
+              Delete All 🗑️
+            </button>
+          )}
+        </ul>
+      </TodoList>
     </Container>
   );
 };

@@ -12,3 +12,6 @@ export const Mode = styled.div`
     font-size: 18px;
   }
 `;
+export const TodoList = styled.div`
+  margin-top: 50px;
+`;
